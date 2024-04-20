@@ -313,6 +313,7 @@ class FastSHAP:
                              'Dataset')
 
         # Grand coalition value.
+        # basically calculated by looking at the output of the imputer at the normal image
         grand_train = calculate_grand_coalition(
             train_set, imputer, batch_size * num_samples, link, device,
             num_workers).cpu()
@@ -330,6 +331,9 @@ class FastSHAP:
         self.null = null
 
         # Set up train loader.
+    #     A wrapper around multiple datasets that allows repeated elements when the
+    #     dataset sizes don't match. The number of elements is the maximum dataset
+    #     size, and all datasets must be broadcastable to the same size.
         train_set = DatasetRepeat([train_set, TensorDataset(grand_train)])
         train_loader = DataLoader(
             train_set, batch_size=batch_size, shuffle=True, pin_memory=True,
